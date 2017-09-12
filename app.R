@@ -4,13 +4,13 @@ Stock_Symbols<- c("MSFT", "AAPL", "FB", "GOOG")
 Stock_Close_Price <- NULL
 
 for(i in Stock_Symbols){
-  df1 <- getSymbols(i, from = "2016-01-01",
+  df1 <- getSymbols(i, from = "2014-01-01",
                     to = Sys.Date(), auto.assign = FALSE)
   Close <- df1[,4] 
   Stock_Close_Price <- cbind(Stock_Close_Price, Close) 
 }
 Stock_Close_Price
-TS<-ts(Stock_Close_Price, frequency = 260)
+TS<-ts(Stock_Close_Price, frequency = 5)
 microsoft<-TS[,1]
 apple<-TS[,2]
 facebook<-TS[,3]
@@ -72,12 +72,12 @@ server <- function(input, output, session) {
   })
 
   output$arimaForecastPlot <- renderPlot({
-    f <- forecast(auto.arima(getDataset(),D=1),h=getDays(), level=95)
+    f <- forecast(auto.arima(getDataset()),h=getDays(), level=95)
     plot(f)
   })
   
   output$Predictiontable<-renderDataTable({
-    f <- forecast(auto.arima(getDataset(),D=1),h=getDays(), level=95)
+    f <- forecast(auto.arima(getDataset()),h=getDays(), level=95)
     
     format(returnValue(data.frame(f)), digits = 2, nsmall  = 2)
     
